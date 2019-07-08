@@ -1,0 +1,7 @@
+FROM jupyter/scipy-notebook:d4cbf2f80a2a
+
+RUN conda install -y dask=1.2.2 distributed dask-kubernetes jupyter-server-proxy && \
+    jupyter serverextension enable --sys-prefix jupyter_server_proxy
+
+COPY images/dask/distributed.yaml /etc/dask/distributed.yaml
+COPY images/dask/kubernetes.yaml /etc/dask/kubernetes.yaml

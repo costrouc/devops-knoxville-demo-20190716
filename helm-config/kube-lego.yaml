@@ -1,0 +1,6 @@
+config:
+  LEGO_EMAIL: chris.ostrouchov@gmail.com
+  LEGO_URL: https://acme-v01.api.letsencrypt.org/directory
+
+rbac:
+  create: true

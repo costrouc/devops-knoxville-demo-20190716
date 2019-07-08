@@ -1,0 +1,76 @@
+# setup ssl certificates for domain
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    kubernetes.io/tls-acme: "true"
+  hosts:
+    - jupyter.demo.aves.io
+  tls:
+   - hosts:
+      - jupyter.demo.aves.io
+     secretName: kubelego-tls-jupyterhub
+
+
+hub:
+  baseUrl: "/"
+
+
+proxy:
+  secretToken: "<generate via `openssl rand -hex 32`>"
+
+
+# check every 10 minutes for sessions that have
+# been inactive for 10 minutes
+cull:
+  enabled: true
+  timeout: 600
+  every: 600
+
+# schedule pods on flexible node
+# allocation
+scheduling:
+  userScheduler:
+    enabled: true
+  podPriority:
+    enabled: true
+  userPlaceholder:
+    enabled: false
+    replicas: 4
+  userPods:
+    nodeAffinity:
+      matchNodePurpose: require
+
+# use github authentication
+# many authenticators are supported (ldap, oauth, etc.)
+# create an application for oauth
+# https://github.com/settings/developers
+auth:
+  type: github
+  github:
+    clientId: "<client id from github oauth app>"
+    clientSecret: "<client secret from github oauth app>"
+    callbackUrl: "https://jupyter.demo.aves.io/hub/oauth_callback"
+  admin:
+    access: true
+    users:
+      - costrouc
+  whitelist:
+    users:
+      - vt102
+
+singleuser:
+  image:
+    # example of using customer docker image
+    # images/Dockerfile that was pushed to docker
+    name: costrouc/devops-knox-jupyterlab
+    tag: 1
+  # sensitive security issue
+  # pods ["get", "list", "create"]
+  serviceAccountName: jupyterlab-sa
+  cpu:
+    limit: 1.0
+    guarantee: 0.1
+  memory:
+    limit: 1G
+    guarantee: 0.5G

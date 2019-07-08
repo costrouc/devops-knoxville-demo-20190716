@@ -1,0 +1,7 @@
+alertmanager:
+  enabled: false
+
+server:
+  ingress:
+    # need to secure endpoint first
+    enabled: false

@@ -1,0 +1,31 @@
+kubernetes:
+  worker-template:
+    kind: Pod
+    spec:
+      restartPolicy: Never
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: hub.jupyter.org/node-purpose
+                    operator: In
+                    values:
+                      - cpu-worker
+      tolerations:
+        - effect: NoSchedule
+          key: hub.jupyter.org_dedicated
+          operator: Equal
+          value: cpu-worker
+      containers:
+        - image: daskdev/dask:latest
+          imagePullPolicy: IfNotPresent
+          args: [dask-worker, --nthreads, '1', --no-bokeh, --memory-limit, '3.75GB', --death-timeout, '60']
+          name: dask
+          resources:
+            limits:
+              cpu: "1"
+              memory: "3.75G"
+            requests:
+              cpu: "0.9"
+              memory: "3.5G"

@@ -1,0 +1,23 @@
+persistence:
+  enabled: true
+  accessModes:
+    - ReadWriteOnce
+  size: 5Gi
+
+admin:
+  existingSecret: "grafana-password"
+  userKey: admin-user
+  passwordKey: admin-password
+
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    kubernetes.io/tls-acme: "true"
+  path: /
+  hosts:
+    - grafana.demo.aves.io
+  tls:
+   - secretName: kubelego-tls-grafana
+     hosts:
+       - grafana.demo.aves.io
