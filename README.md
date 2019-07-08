@@ -12,9 +12,31 @@ A [google cloud account](console.cloud.google.com) for this demo.
 
 ## Steps
 
-1. Create a google cloud project `devops-knox` (2-3 minutes)
+1. Create a google cloud project `devops-knox` your project name will
+   be different(2-3 minutes). 
+   
+```shell
+# login into account and project name
+gcloud init
+```
 
-2. Provision nodes on gcloud. This may fail the first time since you
+2. Set environment variables
+
+```shell
+export GCLOUD_PROJECT="<matching project name>"
+export GCLOUD_ZONE=us-east1-c
+export GCLOUD_CLUSTER=devops-knox
+export GCLOUD_ACCOUNT="<account email>"
+
+export GRAFANA_PASSWORD="..."
+export JUPYTER_SECRET_TOKEN="<generate via `openssl rand -hex 32`>"
+# create github oauth application 
+# https://developer.github.com/apps/building-oauth-apps/
+export GITHUB_CLIENT_ID="..."
+export GITHUB_CLIENT_SECRET="..."
+```
+
+3. Provision nodes on gcloud. This may fail the first time since you
    will not have the "Kubernetes Engine API enabled" (10-20 minutes)
 
 ```shell
@@ -40,6 +62,10 @@ docker push costrouc/devops-knox-jupyterlab:1
 bash scripts/02-helm-installation.sh
 ```
 
-6. Https certificates take about 10 minutes to be created and available
+6. Point DNS at nginx-ingress load balancer. This is done many
+   ways. Note that the current example uses `aves.io` which the author
+   owns.
+
+7. https certificates take about 10 minutes to be available
 
 
